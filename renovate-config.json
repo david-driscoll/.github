@@ -29,7 +29,11 @@
     "**/Directory.Packages.support.props"
   ],
   "nuget": {
-    "ignorePaths": ["**/node_modules/**", "**/bower_components/**", "**/vendor/**", "**/examples/**", "**/__fixtures__/**", "**/Directory.Packages.support.props"]
+    "ignorePaths": ["**/node_modules/**", "**/bower_components/**", "**/vendor/**", "**/examples/**", "**/__fixtures__/**", "**/Directory.Packages.support.props"],
+    "managerFilePatterns": ["/\\.cs$/"]
+  },
+  "cake": {
+    "managerFilePatterns": ["/\\.cs$/"]
   },
   "platformAutomerge": true,
   "automergeType": "pr",
