@@ -51,6 +51,16 @@
   "gitIgnoredAuthors": ["41898282+github-actions[bot]@users.noreply.github.com", "33589210+rsg-bot@users.noreply.github.com"],
   "packageRules": [
     {
+      "description": [
+        "Counterpart to the `docker:pinDigests` preset above. That preset sets `pinDigests: true` for every `docker` datasource, then turns it back off for the managers that cannot physically write a digest (argocd, devcontainer, helmv3, pyenv). `helmfile` belongs in that list but upstream omits it.",
+        "The helmfile manager extracts `oci://` charts with the `docker` datasource but never sets `currentDigest`, and it exports neither `updateDependency` nor an `autoReplaceStringTemplate`. A `pinDigest` update for a helmfile release is therefore impossible to apply: `doAutoReplace` cannot satisfy `confirmIfDepUpdated`, throws `WORKER_FILE_UPDATE_FAILED`, and Renovate reports 'Error updating branch: update failure' on every single run, forever.",
+        "Manager-level `helmfile: { pinDigests: false }` does NOT fix this: packageRules are applied after manager config (workers/repository/process/fetch.ts), so the preset's rule wins. It has to be suppressed with a packageRule, which is what this is.",
+        "Verified against renovate 44.3.2."
+      ],
+      "matchManagers": ["helmfile"],
+      "pinDigests": false
+    },
+    {
       "matchManagers": ["nuget"],
       "groupName": "build dependencies",
       "matchPackagePatterns": ["^Microsoft\\.NET\\.Test\\.Sdk$", "^Rocket\\.Surgery\\.MSBuild"],
