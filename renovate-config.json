@@ -310,6 +310,11 @@
       "matchPackagePatterns": ["^nuke.globaltool", "^Nuke.", "^Rocket\\.Surgery\\.Nuke"],
       "labels": [":truck: private-dependencies"],
       "automerge": true
+    },
+    {
+      "description": "The helmfile manager's chart `version:` field cannot hold an OCI digest. `docker:pinDigests` (extended above) sets pinDigests via a packageRule, which is applied after manager-level config and therefore overrides any `helmfile: { pinDigests: false }` set in a repo config. The resulting pinDigest update makes autoReplace write `1.2.3@sha256:...` into `version:`; re-extraction reports 'Value is not updated' / 'Digest is not updated' and the branch dies with 'update failure', so it cycles between Awaiting Schedule and Error updating branch forever. Mirrors the argocd/devcontainer/helmv3/pyenv exemption that docker:pinDigests already ships upstream.",
+      "matchManagers": ["helmfile"],
+      "pinDigests": false
     }
   ]
 }
